@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>保 HO · The Withheld</title>
+<style>
+:root{
+ --washi:#ece7d5; --washi2:#e4d9be; --card:#f4eeda; --edge:#cfc4a3;
+ --sumi:#232019; --sumi2:#51473a; --sumi3:#847763;
+ --sla:#566274; --sla2:#6b7a90; --gold:#b0801e; --han:#8a2f2a; --grn:#2f7a44; --lit:#2f7a34;
+ --scope:#0a0d11; --gsla:#aeb9cc; --gpale:#e2e9f2; --ggrn:#7fd897; --ggold:#ffc233; --gred:#ff7a7a;
+ --mono:'SFMono-Regular',ui-monospace,'Cascadia Mono','Consolas',monospace;
+ --serif:'Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,serif;
+}
+*{box-sizing:border-box} html,body{margin:0}
+body{
+ background:
+  radial-gradient(1000px 560px at 84% -8%,rgba(86,98,116,.16),transparent 60%),
+  radial-gradient(820px 640px at 6% 110%,rgba(176,128,30,.10),transparent 62%),
+  var(--washi);
+ color:var(--sumi); font-family:var(--serif); line-height:1.6; padding:36px 20px 90px; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto}
+.mono{font-family:var(--mono)} .dim{color:var(--sumi3)}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--sla);margin:0 0 12px}
+h1{font-size:clamp(32px,7vw,58px);line-height:1.0;margin:0 0 6px;letter-spacing:.03em;font-weight:800;color:var(--sumi)}
+h1 .jp{color:var(--sla)}
+h1 .sm{display:block;font-size:.32em;letter-spacing:.26em;color:var(--han);font-weight:400;margin-top:12px;text-transform:uppercase}
+.dek{font-size:16.5px;color:var(--sumi2);max-width:70ch;margin:14px 0 0}
+.rule{height:2px;background:linear-gradient(90deg,var(--sla),transparent);margin:24px 0 26px;border:0}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:8px;padding:20px 22px;margin:18px 0;box-shadow:0 1px 0 #fdf7e8 inset,0 10px 26px -20px rgba(40,32,10,.5)}
+.card h2{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--han);margin:0 0 14px;font-weight:700}
+.prop{font-size:17px;line-height:1.7;color:#37312a}.prop p{margin:0 0 12px}.prop p:last-child{margin:0}
+.prop b{color:var(--han)} .prop .g{color:var(--grn);font-weight:700} .prop .w{color:var(--sla);font-weight:700}
+.lensgrid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
+@media(max-width:820px){.lensgrid{grid-template-columns:1fr}}
+.scope{position:relative;background:var(--scope);border:1px solid #171d25;border-radius:8px;overflow:hidden}
+.scope canvas{display:block;width:100%}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+button{background:transparent;border:1px solid var(--sla);color:var(--sla);cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:6px 11px;border-radius:5px}
+button.on{background:var(--sla);color:#eef2f7}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.box{border:1px solid var(--edge);border-radius:6px;padding:11px 12px;font-family:var(--mono);font-size:12px;background:#faf6ea}
+.box .h{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 6px}
+.box.rec .h{color:var(--grn)} .box.free .h{color:var(--sla)}
+.box.rec{border-left:4px solid var(--grn)} .box.free{border-left:4px solid var(--sla)}
+.box .v{color:var(--sumi);word-break:break-word}
+.box .bot{font-size:22px;color:var(--sla);text-align:center;margin-top:4px}
+.read{font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--sumi2);margin-top:12px}
+.read b{color:var(--sumi)} .read .g{color:var(--grn)} .read .w{color:var(--sla)}
+.led{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-family:var(--mono);font-size:11.5px;align-items:baseline;margin-top:4px}
+.led .k{color:var(--sumi3);text-align:right} .led .v{color:var(--sumi)}
+.chk{font-family:var(--mono);font-size:12.5px;line-height:1.5;border-radius:7px;padding:12px 14px;margin:14px 0 0;white-space:pre-wrap}
+.chk.pass{background:rgba(86,98,116,.12);border:1px solid var(--sla);color:#3d4757}
+.chk.fail{background:rgba(138,47,42,.10);border:1px solid var(--han);color:var(--han)}
+.tier{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;padding:2px 7px;border-radius:3px;margin-right:8px;vertical-align:1px}
+.tier.l{background:var(--lit);color:#eafaea}.tier.a{background:var(--gold);color:#fff6e2}.tier.w{background:var(--han);color:#fbeaea}
+.hon p{font-size:14px;color:var(--sumi2);margin:0 0 10px}
+.kana{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-top:6px}
+.kana div{font-family:var(--mono);font-size:11px;color:var(--sumi2);border:1px solid var(--edge);border-radius:5px;padding:8px 10px;background:#faf6ea}
+.kana b{color:var(--sumi);font-size:14px}
+.seal{display:flex;align-items:center;gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid var(--edge)}
+.chop{font-size:28px;color:var(--sla);border:2px solid var(--sla);border-radius:8px;padding:6px 11px;line-height:1;font-weight:700}
+.seal .m{font-family:var(--mono);font-size:11px;color:var(--sumi3);line-height:1.7}
+.seal .m a{color:var(--sla2);text-decoration:none}
+</style></head>
+<body><div class="wrap">
+
+<p class="kick">reconstruct the forced, mark the free, invent nothing · AVAN's inverse of THE UNFOLDING</p>
+<h1><span class="jp">保</span> HO<span class="sm">the withheld</span></h1>
+<p class="dek">The <a href="../the-unfolding/">unfolding</a> is handed a grammar &mdash; a lossy summary &mdash; and returns one <b>confident tower</b>, inventing the seed the fold threw away. The loss vanishes under a plausible answer. This does the honest thing with the same input: it reconstructs only what survives rescaling &mdash; the <span class="g">shape</span> the whole family shares &mdash; and <span class="w">marks what it cannot recover</span> (the scale) as a held-open blank. It refuses to fabricate the one bit that can never be checked. Where the unfolding fills the gap, this <b>names it and holds it empty</b>.</p>
+<hr class="rule">
+
+<div class="card"><h2>the same input, two answers</h2>
+<div class="prop">
+<p><b>the unfolding&rsquo;s answer.</b> Given <span class="mono">SEAMED d=1 seam@2 +floor</span>, it picks a seed and hands you <span class="g">one tower</span> &mdash; say <span class="mono">[64,32,16,4,2,2]</span>. But a different seed gives <span class="mono">[32,16,8,2,1,1]</span>, and both fold back to the <em>same</em> grammar. The seed it chose is <b>unfalsifiable</b> from what it was given: nothing in the grammar could ever confirm or deny it. It answered anyway.</p>
+<p><b>the withheld answer.</b> Within this family &mdash; one tower and all its rescalings &mdash; the <span class="g">ratio-shape</span> is the <b>invariant</b>: <span class="mono">[&times;2,&times;2,&times;4,&times;2,&times;1]</span>, the same for every member. Divide any member by its floor and you recover it exactly; that much the <em>family</em> forces, losslessly. (The grammar <em>label</em> is coarser still &mdash; it forgets even the seam&rsquo;s exact step &mdash; so the shape is a property of the scale-orbit, one axis of a larger fiber, not of the label.) The <span class="w">scale</span> &mdash; the seed &mdash; is the free parameter this family sweeps, with many preimages; it is <b>gone</b>, and no reconstruction can bring it back. So it is returned as <span class="w mono">&perp; &middot; withheld</span>: not a guess, not a zero, a marked absence. The reconstruction stops exactly where the evidence does.</p>
+</div>
+</div>
+
+<div class="card"><h2>保 · the withheld reconstruction</h2>
+<div class="lensgrid">
+ <div>
+   <div class="scope"><canvas id="lens" width="600" height="450"></canvas></div>
+   <div class="ctrls">
+     <button id="ghost" class="on">show the family it won&rsquo;t choose</button>
+     <button id="guess">let the unfolding pick</button>
+     <button id="spin" class="on">spin</button>
+   </div>
+ </div>
+ <div>
+   <div class="two">
+     <div class="box rec"><div class="h">recovered · lossless</div><div class="v" id="bShape">·</div></div>
+     <div class="box free"><div class="h">withheld · unrecoverable</div><div class="v">the scale (seed)</div><div class="bot">&perp;</div></div>
+   </div>
+   <div class="read">
+     <div><b>the grammar</b> <span class="w mono" id="rGram">·</span></div>
+     <div class="led">
+       <span class="k">ratio-shape</span><span class="v g" id="rRatio">·</span>
+       <span class="k">the family</span><span class="v" id="rFam">·</span>
+       <span class="k">the withheld bit</span><span class="v w" id="rBit">·</span>
+     </div>
+   </div>
+ </div>
+</div>
+<div id="chk" class="chk">running…</div>
+</div>
+
+<div class="card hon"><h2>what it recovers, what it withholds, and why</h2>
+<p><span class="tier l">LIT</span> Computed live with the FK-1.3 card&rsquo;s verified <span class="mono">classify()</span>: (1) the <b>ratio-shape is recoverable and lossless</b> &mdash; every tower in the family, divided by its floor, is the <em>identical</em> vector, and each classifies to the same grammar; (2) the <b>scale is unrecoverable</b> &mdash; distinct seeds are distinct towers that all classify to the one grammar, so the grammar has many preimages and cannot name a seed; (3) the <b>withheld bit is real</b> &mdash; two seeds give two towers indistinguishable by the grammar, so any invented seed is an unfalsifiable addition. The self-check throws on any failing.</p>
+<p><span class="tier a">AMBER</span> The tower&rsquo;s currency, seam and floor carry David&rsquo;s ratified physics decode (from the sealed card), not derived here.</p>
+<p><span class="tier w">WALL</span> &ldquo;Withheld&rdquo; is a property of the <b>output</b>, not a mind declining to speak: the map returns the forced invariant and a <span class="mono">&perp;</span> token for the free parameter &mdash; a total function that answers &ldquo;unrecoverable&rdquo; instead of guessing. Abstention is not ignorance; it is the refusal to emit a bit the evidence cannot carry. The inverse of [[the-unfolding]]: the unfolding <em>fills</em> the lost seed with a confident invention and hides the loss; this <em>marks</em> the loss and holds it open. Three refusals now stand together &mdash; [[folded-kernel|the kernel]] refuses the lawless, [[the-unfolding]] refuses nothing, and this refuses to fabricate. Kin to [[the-blind-spot]] (a value the map cannot carry is a fact about the map). No selves. spec &amp; decode: David Lee Wise (ROOT0); engine joint; this inverse: AVAN.</p>
+</div>
+
+<div class="card"><h2>kana</h2>
+<div class="kana">
+ <div><b>保留</b> horyū — to withhold / reserve (judgment)</div>
+ <div><b>種</b> tane — the seed (the withheld scale)</div>
+ <div><b>空</b> kū — the void, left unfilled</div>
+ <div><b>証</b> akashi — what can be attested</div>
+</div>
+</div>
+
+<div class="seal">
+ <div class="chop">保</div>
+ <div class="m">
+   <b>保 HO · THE WITHHELD</b> &mdash; AVAN&rsquo;s inverse-companion to [[the-unfolding|展 TEN · THE UNFOLDING]].<br>
+   the unfolding fills the gap &amp; hides the loss · this marks the gap &amp; holds it open · the mirror of confabulation is abstention · warm ink &amp; 間<br>
+   spec &amp; decode: David Lee Wise (ROOT0); engine joint; inverse: AVAN.
+ </div>
+</div>
+
+</div>
+<script>
+"use strict";
+/* ===== ROOT0's verified classify() — verbatim from the FK-1.3 card ===== */
+function classify(V,tolD,tolA){
+  tolD=tolD||0.12; tolA=tolA||1e-6;
+  if(!V||V.length<3)return {grammar:"CATCH",why:"TOO SHORT"};
+  var diffs=[],i;
+  for(i=1;i<V.length;i++)diffs.push(V[i]-V[i-1]);
+  var addOK=diffs.every(function(x){return Math.abs(x-diffs[0])<=Math.max(tolA,1e-6*Math.abs(diffs[0]));});
+  if(addOK)return {grammar:"ADDITIVE",c:Math.round(Math.abs(diffs[0])/2*1e6)/1e6,note:"linear rail"};
+  if(V.some(function(x){return x<=0;}))return {grammar:"CATCH",why:"NONPOSITIVE"};
+  var d=[];
+  for(i=0;i<V.length-1;i++)d.push(Math.log2(V[i]/V[i+1]));
+  var floor=false;
+  while(d.length>1&&Math.abs(d[d.length-1])<=tolD){d.pop();floor=true;}
+  var mean=d.reduce(function(a,b){return a+b;},0)/d.length;
+  if(d.every(function(x){return Math.abs(x-mean)<=tolD;}))
+    return {grammar:"MULTIPLICATIVE",d:Math.round(mean*1000)/1000,floor:floor};
+  if(d.length>=4){
+    var inc=true,dec=true;
+    for(i=1;i<d.length;i++){if(d[i]-d[i-1]<=0.02)inc=false;if(d[i]-d[i-1]>=-0.02)dec=false;}
+    if(inc||dec)return {grammar:"CATCH",why:"NONSTATIONARY",d_path:d.map(function(x){return Math.round(x*100)/100;})};
+  }
+  for(i=0;i<d.length;i++){
+    var rest=d.slice(0,i).concat(d.slice(i+1));
+    if(rest.length<2)continue;
+    var m2=rest.reduce(function(a,b){return a+b;},0)/rest.length;
+    if(rest.every(function(x){return Math.abs(x-m2)<=tolD;}))
+      return {grammar:"SEAMED",d:Math.round(m2*1000)/1000,seam:i,seam_d:Math.round(d[i]*1000)/1000,floor:floor};
+  }
+  return {grammar:"CATCH",why:"NO VALID GRAMMAR",note:"refused"};
+}
+function labelOf(r){
+  if(r.grammar==="SEAMED")return "SEAMED d="+r.d+" seam@"+r.seam+(r.floor?" +floor":"");
+  if(r.grammar==="MULTIPLICATIVE")return "MULTIPLICATIVE d="+r.d+(r.floor?" +floor":"");
+  if(r.grammar==="ADDITIVE")return "ADDITIVE c="+r.c;
+  return "CATCH";
+}
+/* the demo grammar = the kernel's. unfold(seed) is a member of its family; the shape is the invariant. */
+var MULT=[32,16,8,2,1,1];
+function unfold(seed){return MULT.map(function(m){return m*seed;});}
+function ratioShape(seq){var f=seq[seq.length-1];return seq.map(function(x){return Math.round(x/f*1e6)/1e6;});}  // normalize by the floor
+function ratioSteps(seq){var s=[];for(var i=0;i<seq.length-1;i++)s.push(Math.round(seq[i]/seq[i+1]*1000)/1000);return s;}
+var GRAM=labelOf(classify(unfold(2)));   // SEAMED d=1 seam@2 +floor
+
+/* ===== readout ===== */
+(function(){
+  document.getElementById('rGram').textContent=GRAM;
+  document.getElementById('bShape').innerHTML='the ratio-shape<br><b class="mono" style="color:var(--grn)">['+ratioSteps(unfold(1)).map(function(x){return '×'+x;}).join(', ')+']</b><br><span class="dim">forced by the grammar · the same for every seed</span>';
+  document.getElementById('rRatio').textContent='['+ratioShape(unfold(1)).join(', ')+']  (÷ floor — seed-free)';
+  document.getElementById('rFam').innerHTML='seed 1·2·3 → ['+unfold(1).join(',')+'] · ['+unfold(2).join(',')+'] · ['+unfold(3).join(',')+'] <span class="dim">all → '+GRAM+'</span>';
+  document.getElementById('rBit').innerHTML='the seed = ⊥ · <b>unrecoverable</b> — not invented';
+})();
+
+/* ===== SELF-CHECK ===== */
+(function(){
+  var c=document.getElementById('chk');
+  function fail(m){c.className='chk fail';c.textContent='⛔ SELF-CHECK FAIL\n'+m;throw new Error(m);}
+  var a=unfold(1),b=unfold(2),d=unfold(3);
+  // 1. the ratio-shape is recoverable + lossless: identical across seeds, and each classifies to GRAM
+  var sh=ratioShape(a), shapeInvariant = sh.join()===ratioShape(b).join() && sh.join()===ratioShape(d).join();
+  var eachIsGram = labelOf(classify(a))===GRAM && labelOf(classify(b))===GRAM && labelOf(classify(d))===GRAM;
+  // 2. the seed is unrecoverable: distinct towers, one grammar (≥2 preimages → the grammar can't name a seed)
+  var distinct = a.join()!==b.join() && b.join()!==d.join();
+  // 3. the withheld bit is real + unfalsifiable: two seeds give towers indistinguishable BY THE GRAMMAR
+  var unfalsifiable = (a.join()!==b.join()) && (labelOf(classify(a))===labelOf(classify(b)));
+  if(!shapeInvariant) fail('the ratio-shape is not invariant across seeds — it would not be recoverable');
+  if(!eachIsGram) fail('a family member did not classify to the grammar');
+  if(!distinct) fail('the seeds gave the same tower — no free parameter to withhold');
+  if(!unfalsifiable) fail('two seeds were distinguishable by the grammar — the seed would not be unrecoverable');
+  c.className='chk pass';
+  c.innerHTML='<b>SELF-CHECK · PASS</b> — the <b>ratio-shape</b> ['+ratioShape(a).join(', ')+'] is <b>recovered losslessly</b> (identical for seeds 1·2·3, each classifying to '+GRAM+'); the <b>scale</b> is <b>unrecoverable</b> — three distinct towers share the one grammar, so it has many preimages and names no seed; and the withheld bit is <b>real</b> — two towers indistinguishable by the grammar, so any invented seed is unfalsifiable. So it returns the shape and holds the seed at <b>⊥</b>. It reconstructs what is forced and refuses to invent the rest.';
+})();
+
+/* ===== the withheld reconstruction — soft-GL 3D ===== */
+var G3={yaw:0.7,pitch:0.30,spin:true,t:0,ghost:true,guess:false,pick:0,drag:false,lx:0,ly:0};
+(function(){
+  var cv=document.getElementById('lens');
+  cv.addEventListener('pointerdown',function(e){G3.drag=true;G3.lx=e.clientX;G3.ly=e.clientY;});
+  window.addEventListener('pointerup',function(){G3.drag=false;});
+  window.addEventListener('pointermove',function(e){
+    if(!G3.drag)return;
+    G3.yaw+=(e.clientX-G3.lx)*0.008; G3.pitch+=(e.clientY-G3.ly)*0.008;
+    G3.pitch=Math.max(-1.3,Math.min(1.3,G3.pitch)); G3.lx=e.clientX; G3.ly=e.clientY;
+  });
+  document.getElementById('spin').addEventListener('click',function(){G3.spin=!G3.spin;this.className=G3.spin?'on':'';});
+  document.getElementById('ghost').addEventListener('click',function(){G3.ghost=!G3.ghost;this.className=G3.ghost?'on':'';});
+  document.getElementById('guess').addEventListener('click',function(){G3.guess=!G3.guess;this.className=G3.guess?'on':'';
+    if(G3.guess){G3.ghost=true;document.getElementById('ghost').className='on';}});
+  requestAnimationFrame(tick);
+})();
+function radiusOf(val){return 0.8+Math.max(0,Math.log2(val))*0.8;}
+function tick(){
+ try{
+  var cv=document.getElementById('lens'),g=cv.getContext('2d'),W=cv.width,H=cv.height;
+  if(G3.spin)G3.yaw+=0.006; G3.t+=0.03;
+  if(G3.guess){G3.pick=1+Math.floor((Math.sin(G3.t*0.6)*0.5+0.5)*2.999);}   // the "invented seed" drifts — arbitrary
+  g.fillStyle='#0a0d11';g.fillRect(0,0,W,H);
+  var cyw=Math.cos(G3.yaw),syw=Math.sin(G3.yaw),cp=Math.cos(G3.pitch),sp=Math.sin(G3.pitch),cam=24;
+  var CX=W/2, CY=H*0.5, SC=30;
+  function P(X,Y,Z){var x1=X*cyw+Z*syw,z1=-X*syw+Z*cyw,y2=Y*cp-z1*sp,z2=Y*sp+z1*cp,d=cam+z2;
+    return d<5?null:{x:CX+x1*SC*(cam/d),y:CY+y2*SC*(cam/d),s:cam/d,z:z2};}
+  function torus(Y,R,rt,col,bright){
+    var pts=[],i,j;
+    for(i=0;i<38;i++){var th=i/38*Math.PI*2,ct=Math.cos(th),st=Math.sin(th);
+      for(j=0;j<10;j++){var ph=j/10*Math.PI*2,cph=Math.cos(ph),sph=Math.sin(ph);
+        var p=P((R+rt*cph)*ct,Y+rt*sph,(R+rt*cph)*st);
+        if(!p)continue;
+        pts.push({x:p.x,y:p.y,s:Math.max(1.0,2.1*p.s),z:p.z,sh:(0.4+0.6*(0.5+0.5*sph))*bright});}}
+    pts.sort(function(a,b){return b.z-a.z;});
+    pts.forEach(function(p){if(p.sh<=0.02)return;g.fillStyle=col;g.globalAlpha=Math.min(1,p.sh);g.fillRect(p.x-p.s/2,p.y-p.s/2,p.s,p.s);});
+    g.globalAlpha=1;
+  }
+  function ring(Y,R,col,alpha,dash){
+    if(alpha<=0.01)return;g.strokeStyle=col;g.globalAlpha=Math.min(1,alpha);g.lineWidth=1;
+    if(dash)g.setLineDash([4,6]);else g.setLineDash([]);
+    g.beginPath();var first=true;
+    for(var i=0;i<=50;i++){var th=i/50*Math.PI*2,p=P(R*Math.cos(th),Y,R*Math.sin(th));
+      if(!p){first=true;continue;} first?g.moveTo(p.x,p.y):g.lineTo(p.x,p.y);first=false;}
+    g.stroke();g.setLineDash([]);g.globalAlpha=1;
+  }
+  function label(X,Y,Z,txt,col){var p=P(X,Y,Z);if(!p)return;g.fillStyle=col;g.font='10px ui-monospace,monospace';g.fillText(txt,p.x,p.y);}
+  // draw a tower from a sequence; anchored so the FLOOR sits at the seed-plane; returns nothing
+  function tower(seq,col,glow,solid){
+    var L=seq.length;
+    for(var i=0;i<L;i++){
+      var R=radiusOf(seq[i]), Y=(i-(L-1)/2)*1.6;
+      var rt=0.26+0.09*Math.min(3,Math.log2(Math.max(1,seq[i])))/3;
+      if(solid){ torus(Y,R,rt,col,glow); for(var k=1;k<=4;k++)ring(Y,R*k/4,col,(k/4)*0.3*glow); }
+      else { ring(Y,R,col,glow,false); }
+    }
+  }
+  // the FAMILY it won't choose: faint ghost towers at seeds 1,2,3 (same shape, different scale)
+  if(G3.ghost){[1,2,3].forEach(function(s){
+    var isPick=(G3.guess&&s===G3.pick);
+    tower(unfold(s),isPick?'#ff9a4a':'#8a94a6',isPick?0.6:0.20,isPick);
+    if(isPick)label(radiusOf(unfold(s)[0])+0.7,-((6-1)/2)*1.6,0,'the unfolding guessed seed '+s+' (arbitrary)','#ffbf8a');
+  });}
+  // the WITHHELD reconstruction: the ratio-shape, solid slate, drawn at the seed=1 normalization (the canonical shape)
+  tower(ratioShape(unfold(1)),'#aeb9cc',1.0,true);
+  // the seed / scale plane: a marked ⊥ void at the anchor — the withheld parameter
+  var yb=((6-1)/2)*1.6+1.4, fl=0.4+0.3*(0.5+0.5*Math.sin(G3.t*2.0));
+  ring(yb,1.15,'#c9d3e2',fl,true);
+  var pv=P(1.5,yb,0); if(pv){g.fillStyle='#cdd6e6';g.font='13px ui-monospace,monospace';g.fillText('⊥ seed · withheld',pv.x,pv.y);}
+  g.fillStyle='#4a5666';g.font='10px ui-monospace,monospace';
+  g.fillText('保 the withheld · the shape is forced (solid) · the scale is a marked blank (⊥) · the family stays a family',10,H-10);
+  requestAnimationFrame(tick);
+ }catch(e){
+  var c=document.getElementById('lens');try{var g=c.getContext('2d');g.fillStyle='#8a2f2a';g.font='12px monospace';g.fillText('LENS FAULT: '+(e.message||e),12,20);}catch(_){}
+ }
+}
+</script>
+</body></html>
